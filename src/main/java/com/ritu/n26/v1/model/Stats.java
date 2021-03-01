@@ -1,5 +1,9 @@
 package com.bobby.n26.v1.model;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 public class Stats {
     private double min = 0;
     private double max = 0;

@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 @Configuration
 @ConfigurationProperties("txn")
 public class TransactionProperties {

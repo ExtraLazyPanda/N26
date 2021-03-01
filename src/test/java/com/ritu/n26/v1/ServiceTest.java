@@ -23,6 +23,10 @@ import java.util.concurrent.*;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @TestPropertySource(locations="classpath:application.yml")

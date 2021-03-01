@@ -19,6 +19,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 @Component("expiryMapStore")
 public class ExpiringConcurrentMapStore implements TransactionStore ,
     ConfigListener {

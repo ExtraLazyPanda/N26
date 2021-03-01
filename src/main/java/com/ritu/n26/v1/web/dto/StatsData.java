@@ -1,17 +1,21 @@
-package com.bobby.n26.v1.model;
+package com.bobby.n26.v1.web.dto;
 
-public class Stats {
-    private double min = 0;
-    private double max = 0;
-    private double avg = 0;
-    private double sum = 0;
-    private long count = 0;
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
+public class StatsData {
+    private double min;
+    private double max;
+    private double avg;
+    private double sum;
+    private long count;
 
     public double getMin() {
         return min;
     }
 
-    public Stats setMin(double min) {
+    public StatsData setMin(double min) {
         this.min = min;
         return this;
     }
@@ -20,7 +24,7 @@ public class Stats {
         return max;
     }
 
-    public Stats setMax(double max) {
+    public StatsData setMax(double max) {
         this.max = max;
         return this;
     }
@@ -29,7 +33,7 @@ public class Stats {
         return avg;
     }
 
-    public Stats setAvg(double avg) {
+    public StatsData setAvg(double avg) {
         this.avg = avg;
         return this;
     }
@@ -38,7 +42,7 @@ public class Stats {
         return sum;
     }
 
-    public Stats setSum(double sum) {
+    public StatsData setSum(double sum) {
         this.sum = sum;
         return this;
     }
@@ -47,13 +51,13 @@ public class Stats {
         return count;
     }
 
-    public Stats setCount(long count) {
+    public StatsData setCount(long count) {
         this.count = count;
         return this;
     }
 
     @Override public String toString() {
-        return "Stats{" + "min=" + min + ", max=" + max + ", avg=" + avg
+        return "StatsData{" + "min=" + min + ", max=" + max + ", avg=" + avg
             + ", sum=" + sum + ", count=" + count + '}';
     }
 }

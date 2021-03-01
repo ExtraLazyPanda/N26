@@ -14,6 +14,10 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 public class ExpireCacheTests {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

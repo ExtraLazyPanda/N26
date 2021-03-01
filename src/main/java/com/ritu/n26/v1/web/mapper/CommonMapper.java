@@ -8,6 +8,10 @@ import com.bobby.n26.v1.web.dto.StatsData;
 import com.bobby.n26.v1.web.dto.TransactionData;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 @Component
 public class CommonMapper {
 

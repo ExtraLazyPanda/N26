@@ -20,10 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.bobby.n26.v1.common.Utils.format;
 import static com.bobby.n26.v1.common.Utils.toLocalDateTime;
 
-/**
- * @author Babak Eghbali (Bob)
- * @since 2018/06/02
- */
 @Component("customStore")
 public class CustomConcurrentStore implements TransactionStore {
 

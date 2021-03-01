@@ -6,30 +6,56 @@ import com.bobby.n26.v1.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static com.bobby.n26.v1.common.Utils.format;
+import static com.bobby.n26.v1.common.Utils.toLocalDateTime;
 
-@Component("mapStore")
-public class ConcurrentMapStore implements TransactionStore {
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
+@Component("customStore")
+public class CustomConcurrentStore implements TransactionStore {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private List<Transaction> store = new ArrayList<>();
+    private Lock lock = new ReentrantLock();
+    @Autowired private TransactionProperties prop;
 
-    @Autowired TransactionProperties prop;
-
-    private ConcurrentHashMap<Long,Double> store = new ConcurrentHashMap<>();
-
+    private void lock(){
+        lock.lock();
+    }
+    private void unLock(){
+        lock.unlock();
+    }
 
     @Override public void save(Transaction txn) {
-        store.put(txn.getTime(), txn.getAmount());
+        lock();
+        store.add(txn);
+        // Only to simulate the delay in a long running process
+        if (prop.getDelayForSaveByMillis() != 0){
+            try {
+                TimeUnit.MILLISECONDS.sleep(prop.getDelayForSaveByMillis());
+            } catch (InterruptedException ignored) {
+                log.error("thread sleep interrupted");
+            }
+        }
+        //
+        unLock();
     }
 
     @Override public Stats getStatistics() {
+        lock();
         // prepare
         Instant calculationMoment = Instant.now();
         long oldestAcceptableTxnTime = calculationMoment
@@ -41,13 +67,23 @@ public class ConcurrentMapStore implements TransactionStore {
         // call calculate
         Stats stats = manualCalculate(oldestAcceptableTxnTime);
         log.debug("Stats calculation result: {}",stats);
+        // Only to simulate the delay in a long running process
+        if (prop.getDelayForStatsByMillis() != 0){
+            try {
+                TimeUnit.MILLISECONDS.sleep(prop.getDelayForStatsByMillis());
+            } catch (InterruptedException ignored) {
+                log.error("thread sleep interrupted");
+            }
+        }
+        //
+        unLock();
         return stats;
     }
 
     private Stats streamCalculate(long oldestAcceptableTxnTime){
-        DoubleSummaryStatistics summary = store.entrySet().stream()
-            .filter(p -> p.getKey() >= oldestAcceptableTxnTime)
-            .mapToDouble(Map.Entry::getValue).summaryStatistics();
+        DoubleSummaryStatistics summary = store.stream()
+            .filter(p -> p.getTime() >= oldestAcceptableTxnTime)
+            .mapToDouble(Transaction::getAmount).summaryStatistics();
         return new Stats()
             .setAvg(summary.getAverage())
             .setCount(summary.getCount())
@@ -59,11 +95,11 @@ public class ConcurrentMapStore implements TransactionStore {
     private Stats manualCalculate(long oldestAcceptableTxnTime){
         double min = 0 , max = 0 , sum = 0;
         long count = 0;
-        for (Map.Entry<Long,Double> txn : store.entrySet()){
-            if (txn.getValue() < oldestAcceptableTxnTime){
+        for (Transaction txn : store){
+            if (txn.getTime() < oldestAcceptableTxnTime){
                 continue;
             }
-            double amount = txn.getValue();
+            double amount = txn.getAmount();
             // min
             if (count == 0){
                 min = amount;
@@ -89,6 +125,8 @@ public class ConcurrentMapStore implements TransactionStore {
     }
 
     @Override public void reset() {
+        lock();
         store.clear();
+        unLock();
     }
 }

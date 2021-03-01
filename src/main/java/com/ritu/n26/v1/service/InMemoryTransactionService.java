@@ -15,6 +15,10 @@ import java.time.Instant;
 
 import static com.bobby.n26.v1.common.Utils.format;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 @Service
 public class InMemoryTransactionService implements TransactionService {
 

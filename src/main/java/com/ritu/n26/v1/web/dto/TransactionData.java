@@ -2,6 +2,10 @@ package com.bobby.n26.v1.web.dto;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * @author Babak Eghbali (Bob)
+ * @since 2018/06/02
+ */
 public class TransactionData {
 
     @NotNull
